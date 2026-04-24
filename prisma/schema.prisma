@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  phone_number String?
+  aadhar_card  String?
+  created_at   DateTime @default(now())
+
+  lostItems  LostItem[]
+  foundItems FoundItem[]
+}
+
+model LostItem {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  name          String
+  category      String
+  description   String
+  location_lost String
+  date_lost     DateTime
+  photo_urls    String?  // Stored as JSON string
+  status        String   @default("searching") // searching | matched | resolved
+  created_at    DateTime @default(now())
+
+  matches       Match[]
+}
+
+model FoundItem {
+  id             String   @id @default(cuid())
+  finderId       String
+  finder         User     @relation(fields: [finderId], references: [id])
+  category       String
+  description    String
+  location_found String
+  date_found     DateTime
+  photo_urls     String?  // Stored as JSON string
+  status         String   @default("unclaimed") // unclaimed | claimed
+  created_at     DateTime @default(now())
+
+  matches        Match[]
+}
+
+model Match {
+  id            String   @id @default(cuid())
+  lostItemId    String
+  lostItem      LostItem @relation(fields: [lostItemId], references: [id])
+  foundItemId   String
+  foundItem     FoundItem @relation(fields: [foundItemId], references: [id])
+  match_score   Float
+  status        String   @default("pending") // pending | verified | rejected
+  created_at    DateTime @default(now())
+
+  conversations Conversation[]
+}
+
+model Conversation {
+  id         String   @id @default(cuid())
+  matchId    String
+  match      Match    @relation(fields: [matchId], references: [id])
+  user1Id    String
+  user2Id    String
+  created_at DateTime @default(now())
+
+  messages   Message[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  content        String
+  created_at     DateTime @default(now())
+}
