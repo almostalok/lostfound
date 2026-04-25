@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { writeFile, mkdir, readFile } from 'fs/promises';
 import { join } from 'path';
@@ -64,7 +65,7 @@ export async function submitLostItem(formData: FormData) {
 
   revalidatePath('/dashboard');
   revalidatePath('/report-lost');
-  return { success: true, id: lostItem.id };
+  redirect('/dashboard?tab=my&success=lost');
 }
 
 export async function submitFoundItem(formData: FormData) {
@@ -109,7 +110,7 @@ export async function submitFoundItem(formData: FormData) {
 
   revalidatePath('/dashboard');
   revalidatePath('/report-found');
-  return { success: true, id: foundItem.id };
+  redirect('/dashboard?tab=my&success=found');
 }
 
 async function triggerMatchingForLostItem(lostItemId: string) {

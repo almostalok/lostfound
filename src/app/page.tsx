@@ -16,10 +16,10 @@ export default function Home() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-4xl space-y-8"
       >
-        <h1 className="text-6xl md:text-8xl font-medium tracking-tighter text-white leading-[1.1]">
+        <h1 className="text-6xl md:text-8xl font-medium tracking-tighter text-neutral-900 dark:text-white leading-[1.1]">
           Lost something? <br/> Let AI find it.
         </h1>
-        <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto font-light leading-relaxed">
+        <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto font-light leading-relaxed">
           Lost&Found matches lost items with found reports instantly using advanced AI models. We prioritize your privacy and ensure safe returns through verified, secure claims.
         </p>
         
@@ -33,7 +33,7 @@ export default function Home() {
           </Link>
           <Link 
             href="/report-found"
-            className="flex items-center gap-2 px-8 py-4 bg-transparent text-white border border-white/20 rounded-full font-medium hover:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-8 py-4 bg-transparent text-neutral-900 dark:text-white border border-neutral-300 dark:border-white/20 rounded-full font-medium hover:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
           >
             I found an item
             <ArrowRight className="w-4 h-4" />
@@ -64,13 +64,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4 p-8 rounded-3xl bg-neutral-900/40 border border-white/5 hover:bg-neutral-900/80 hover:border-white/10 transition-colors group"
+            className="space-y-4 p-8 rounded-3xl bg-white/40 dark:bg-neutral-900/40 border border-neutral-100 dark:border-white/5 hover:bg-white/80 dark:bg-neutral-900/80 hover:border-neutral-200 dark:border-white/10 transition-colors group"
           >
-            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-colors">
+            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-neutral-900 dark:text-white group-hover:bg-white group-hover:text-black transition-colors">
               <feature.icon className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-medium text-white">{feature.title}</h3>
-            <p className="text-neutral-400 font-light leading-relaxed">
+            <h3 className="text-xl font-medium text-neutral-900 dark:text-white">{feature.title}</h3>
+            <p className="text-neutral-600 dark:text-neutral-400 font-light leading-relaxed">
               {feature.desc}
             </p>
           </motion.div>

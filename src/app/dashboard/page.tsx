@@ -18,11 +18,11 @@ export default async function DashboardPage() {
   return (
     <div className="max-w-6xl mx-auto py-12">
       <div className="mb-12">
-        <h1 className="text-4xl font-medium tracking-tight mb-4 text-white">Dashboard</h1>
-        <p className="text-neutral-400">View reported items and track your matches.</p>
+        <h1 className="text-4xl font-medium tracking-tight mb-4 text-neutral-900 dark:text-white">Dashboard</h1>
+        <p className="text-neutral-600 dark:text-neutral-400">View reported items and track your matches.</p>
       </div>
 
-      <Suspense fallback={<div className="text-neutral-400">Loading your items...</div>}>
+      <Suspense fallback={<div className="text-neutral-600 dark:text-neutral-400">Loading your items...</div>}>
         <DashboardClient lostItems={lostItems} foundItems={foundItems} />
       </Suspense>
     </div>

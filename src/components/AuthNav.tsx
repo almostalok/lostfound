@@ -31,8 +31,8 @@ export function AuthNav() {
   if (user) {
     return (
       <div className="flex items-center gap-4">
-        <span className="text-sm font-medium text-neutral-400">Hi, {user.user_metadata?.name?.split(' ')[0] || "User"}</span>
-        <button onClick={handleLogout} className="text-sm font-medium bg-white/10 text-white px-5 py-2.5 rounded-full hover:bg-white/20 transition-colors border border-white/10">
+        <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">Hi, {user.user_metadata?.name?.split(' ')[0] || "User"}</span>
+        <button onClick={handleLogout} className="text-sm font-medium bg-white/10 text-neutral-900 dark:text-white px-5 py-2.5 rounded-full hover:bg-white/20 transition-colors border border-neutral-200 dark:border-white/10">
           Logout
         </button>
       </div>
@@ -41,7 +41,7 @@ export function AuthNav() {
 
   return (
     <div className="flex items-center gap-4">
-      <Link href="/auth/login" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+      <Link href="/auth/login" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:text-white transition-colors">
         Login
       </Link>
       <Link href="/auth/register" className="text-sm font-medium bg-white text-black px-5 py-2.5 rounded-full hover:bg-neutral-200 transition-colors">

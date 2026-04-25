@@ -41,7 +41,7 @@ export default async function VerifyResultPage({
           
           <div className="bg-white border border-neutral-200 rounded-xl p-6 mt-8 shadow-sm">
             <p className="text-sm font-medium text-neutral-900 mb-4">You can now contact the finder securely.</p>
-            <Link href={`/chat/${matchId}`} className="w-full flex justify-center items-center gap-2 py-3 bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 transition-colors">
+            <Link href={`/chat/${matchId}`} className="w-full flex justify-center items-center gap-2 py-3 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-lg font-medium hover:bg-neutral-100 dark:bg-neutral-800 transition-colors">
               <MessageSquare className="w-4 h-4" />
               Open Secure Chat
             </Link>
@@ -60,7 +60,7 @@ export default async function VerifyResultPage({
       )}
 
       <div className="mt-10">
-        <Link href="/browse" className="text-sm text-neutral-500 hover:text-neutral-900 underline underline-offset-4">
+        <Link href="/browse" className="text-sm text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 underline underline-offset-4">
           Return to Browse
         </Link>
       </div>

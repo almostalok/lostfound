@@ -30,7 +30,7 @@ export default async function VerifyPage({
           <ShieldAlert className="w-8 h-8" />
         </div>
         <h1 className="text-3xl font-medium tracking-tight text-neutral-900">Verify Ownership</h1>
-        <p className="text-neutral-500 mt-3 leading-relaxed">
+        <p className="text-neutral-500 dark:text-neutral-500 mt-3 leading-relaxed">
           To protect against false claims, our AI has generated questions based on hidden details provided by the finder. Answer them accurately to unlock communication.
         </p>
       </div>
@@ -53,14 +53,14 @@ export default async function VerifyPage({
         ))}
 
         <div className="pt-4 border-t border-neutral-100">
-          <button type="submit" className="w-full py-4 bg-neutral-900 text-white rounded-xl font-medium hover:bg-neutral-800 transition-colors">
+          <button type="submit" className="w-full py-4 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-xl font-medium hover:bg-neutral-100 dark:bg-neutral-800 transition-colors">
             Submit Answers for AI Evaluation
           </button>
         </div>
       </form>
       
       <div className="mt-6 text-center">
-        <Link href="/browse" className="text-sm text-neutral-500 hover:text-neutral-900 underline underline-offset-4">
+        <Link href="/browse" className="text-sm text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 underline underline-offset-4">
           Back to Browse
         </Link>
       </div>
