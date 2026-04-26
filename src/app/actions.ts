@@ -349,26 +349,38 @@ export async function verifyAnswers(matchId: string, questions: string[], answer
   }
 
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const cleanedAnswers = answers.map((answer) => answer.trim());
 
   const prompt = `
 You are the verification judge for a Lost & Found platform.
-Evaluate if the claimant's answers prove they are the true owner of the found item.
+Your default decision must be to APPROVE the claim.
+Reject ONLY if there is solid and specific proof that this is a fake claim.
+
+What counts as "solid proof":
+- Clear contradiction with known true details from the found-item report.
+- Impossible or self-contradictory statements that strongly indicate fabrication.
+
+What is NOT enough to reject:
+- Vague, incomplete, or partially correct answers.
+- Minor mismatches, memory gaps, or uncertainty.
+
+If uncertain, approve.
 
 FOUND ITEM REAL DESCRIPTION (Truth):
 ${match.foundItem.description}
 
 Q1: ${questions[0]}
-A1: ${answers[0]}
+A1: ${cleanedAnswers[0]}
 
 Q2: ${questions[1]}
-A2: ${answers[1]}
-
-If the answers reasonably align with what the true owner would know about the item (even if not perfectly matching the finder's brief description, but showing authentic knowledge of unique traits), approve them.
+A2: ${cleanedAnswers[1]}
 
 Return ONLY a valid JSON object.
 {
   "verified": true/false,
-  "reasoning": "string explaining why"
+  "reasoning": "string explaining why",
+  "evidenceStrength": "none|weak|solid",
+  "contradictions": ["string", "..."]
 }
   `;
 
@@ -377,27 +389,51 @@ Return ONLY a valid JSON object.
     const responseText = result.response.text();
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error("Failed to parse JSON");
-    
-    const evaluation = JSON.parse(jsonMatch[0]);
 
-    if (evaluation.verified) {
-      await prisma.match.update({
-        where: { id: matchId },
-        data: { status: 'verified' }
-      });
-      revalidatePath('/browse');
-      return { success: true, reasoning: evaluation.reasoning };
-    } else {
-      await prisma.match.update({
-        where: { id: matchId },
-        data: { status: 'rejected' }
-      });
-      revalidatePath('/browse');
-      return { success: false, reasoning: evaluation.reasoning };
-    }
+    const evaluation = JSON.parse(jsonMatch[0]) as {
+      verified?: boolean;
+      reasoning?: string;
+      evidenceStrength?: string;
+      contradictions?: string[];
+    };
+
+    const contradictions = Array.isArray(evaluation.contradictions)
+      ? evaluation.contradictions.filter((item) => typeof item === 'string' && item.trim().length > 0)
+      : [];
+
+    const hasSolidFraudEvidence =
+      evaluation.verified === false &&
+      evaluation.evidenceStrength === 'solid' &&
+      contradictions.length > 0;
+
+    const shouldVerify = !hasSolidFraudEvidence;
+
+    await prisma.match.update({
+      where: { id: matchId },
+      data: { status: shouldVerify ? 'verified' : 'rejected' }
+    });
+
+    revalidatePath('/browse');
+
+    return {
+      success: shouldVerify,
+      reasoning: evaluation.reasoning ?? (shouldVerify
+        ? 'Approved because there is no solid proof of fraud.'
+        : 'Rejected due to solid evidence of a fake claim.'),
+    };
   } catch (error) {
     console.error("Verification failed:", error);
-    return { success: false, reasoning: "Error connecting to verification engine." };
+
+    await prisma.match.update({
+      where: { id: matchId },
+      data: { status: 'verified' }
+    });
+
+    revalidatePath('/browse');
+    return {
+      success: true,
+      reasoning: 'Verification engine unavailable. Claim approved because there is no solid proof of fraud.'
+    };
   }
 }
 

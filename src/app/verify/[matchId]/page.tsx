@@ -1,5 +1,5 @@
 import { generateVerificationQuestions, verifyAnswers } from "../../actions";
-import { ShieldAlert, CheckCircle2, XCircle } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -47,13 +47,13 @@ export default async function VerifyPage({
               required 
               rows={3} 
               placeholder="Your answer..." 
-              className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-neutral-400 focus:ring-1 focus:ring-neutral-400 outline-none transition-all resize-none"
+              className="w-full bg-white text-neutral-900 placeholder:text-neutral-500 caret-neutral-900 px-4 py-3 rounded-xl border border-neutral-200 focus:border-neutral-400 focus:ring-1 focus:ring-neutral-400 outline-none transition-all resize-none"
             ></textarea>
           </div>
         ))}
 
         <div className="pt-4 border-t border-neutral-100">
-          <button type="submit" className="w-full py-4 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-xl font-medium hover:bg-neutral-100 dark:bg-neutral-800 transition-colors">
+          <button type="submit" className="w-full py-4 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-xl font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
             Submit Answers for AI Evaluation
           </button>
         </div>
