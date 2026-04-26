@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -22,10 +23,13 @@ export default function RegisterPage() {
     const phone_number = formData.get("phone_number") as string;
     const aadhar_card = formData.get("aadhar_card") as string;
 
+    const emailRedirectTo = `${window.location.origin}/auth/callback?next=/dashboard`;
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo,
         data: {
           name,
           phone_number,
@@ -38,9 +42,45 @@ export default function RegisterPage() {
 
     if (error) {
       alert("Error: " + error.message);
-    } else {
-      router.push("/dashboard");
+      return;
     }
+
+    if (data.session) {
+      router.replace("/dashboard");
+      return;
+    }
+
+    setPendingVerificationEmail(email);
+  }
+
+  if (pendingVerificationEmail) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="w-full max-w-md p-8 rounded-3xl bg-white/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-white/10 backdrop-blur-md text-center">
+          <h1 className="text-3xl font-medium tracking-tight mb-3">Verify your email</h1>
+          <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4">
+            We sent a verification link to <span className="font-medium text-neutral-900 dark:text-white">{pendingVerificationEmail}</span>.
+            Open your inbox and click the link to continue.
+          </p>
+          <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-8">
+            After verification, you will be signed in automatically and redirected to your dashboard.
+          </p>
+
+          <div className="flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => setPendingVerificationEmail(null)}
+              className="w-full bg-white text-black py-3.5 rounded-xl font-medium hover:bg-neutral-200 transition-colors"
+            >
+              Use a different email
+            </button>
+            <Link href="/auth/login" className="text-sm text-neutral-700 dark:text-neutral-300 hover:underline underline-offset-4">
+              Already verified? Continue to login
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
